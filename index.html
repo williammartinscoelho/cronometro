@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cronômetro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
     body {
             margin: 0;
@@ -19,21 +20,56 @@
             cursor: pointer;
             text-align: center;
             color: white;
-            font-size: 29.9874vw;
-            width: 100%;
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
             user-select: none;
         }
+        .inputs {
+            display: flex;
+            width: 100%;
+        }
+        .inputs .cheks {
+            flex-grow: 1;
+        }
+        .inputs .cheks input {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+        }
+        .inputs .controls button {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
+        .timer {
+            font-size: 25vw;
+        }
+
+        
     </style>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    
 </head>
 <body>
 
-<div id="app" @click="toggleTimer">
-    {{ formattedTime }}
+<div id="app" >
+    <div class="inputs">
+        <div class="cheks">
+            <input @click="toggleTimer" class="form-check-input"  type="checkbox" v-for="i in qtdInputs" v-model="inputModel[i-1]" :key="i">
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-success" @click="addInput">+</button>
+            <button class="btn btn-danger" @click="removeInput">-</button>
+            <button class="btn btn-warning" @click="resetInput">R</button>
+        </div>
+    </div>
+    <div class="timer" @click="toggleTimer">
+        {{ formattedTime }}
+    </div>
 </div>
 
 <script>
@@ -42,7 +78,9 @@
         data: {
             isRunning: false,
             startTime: 0,
-            elapsedTime: 0
+            elapsedTime: 0,
+            qtdInputs: 4,
+            inputModel: []
         },
         computed: {
             formattedTime: function () {
@@ -75,6 +113,16 @@
             },
             updateElapsedTime: function () {
                 this.elapsedTime = Date.now() - this.startTime;
+            },
+            addInput: function () {
+                this.qtdInputs++
+            },
+            removeInput: function () {
+                this.qtdInputs--
+            },
+            resetInput: function () {
+                this.qtdInputs = 4
+                this.inputModel = this.inputModel.map(el => false)
             }
         }
     });
